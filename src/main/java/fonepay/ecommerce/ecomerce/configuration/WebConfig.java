@@ -1,5 +1,6 @@
 package fonepay.ecommerce.ecomerce.configuration;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,12 +59,18 @@ public class WebConfig {
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth ->
 					auth
-						.requestMatchers("/api/users/**").permitAll()
-						.requestMatchers("api/create/**").permitAll()
+						.requestMatchers("/api/products/**").permitAll()
+						.requestMatchers("/api/login**").permitAll()
+						.requestMatchers("/api/orders/**").authenticated()
 						.anyRequest().authenticated()
 					);
 		http.authenticationProvider(authProvider());
 		http.addFilterBefore(authenticationJetTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 		return http.build();
+	}
+	
+	@Bean
+	public ModelMapper modelMapper() {
+	    return new ModelMapper();
 	}
 }
